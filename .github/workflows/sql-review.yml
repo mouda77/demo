@@ -11,7 +11,7 @@ jobs:
         # We suggest using the latest version through the tag. Check it at https://github.com/Bytebase/sql-review-action/tags
         uses: bytebase/sql-review-action@main
         with:
-          override-file-path: "./github-action-test/bb.sql-review.dev.yml"
+          override-file-path: "bb.sql-review.dev.yml"
           #template-id: "<SQL review rule template id>"
           database-type: POSTGRES
           file-pattern: ^github-action-test/.*\.sql$
