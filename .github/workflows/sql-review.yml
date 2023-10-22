@@ -1,4 +1,5 @@
 on: [pull_request]
+
 jobs:
   sql-review:
     runs-on: ubuntu-latest
