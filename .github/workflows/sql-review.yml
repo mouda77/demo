@@ -12,6 +12,6 @@ jobs:
         uses: bytebase/sql-review-action@main
         with:
           override-file-path: ".github/workflows/sql-review.yml"
-          template-id: "sql-review.yml"
+          template-id: "sql-review-override.yml"
           database-type: POSTGRES
           file-pattern: ^github-action-test/.*\.sql$
