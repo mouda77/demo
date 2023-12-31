@@ -5,12 +5,12 @@ docker { image 'docker.io/liquibase/liquibase:4.4.2' }
   stages {
     stage('Status') {
       steps {
-        sh 'liquibase status --url="jdbc:mysql://192.168.67.128:3306/liquibase" --changeLogFile=my_app-wrapper.xml --username=newuser --password=P@ssw0rd'
+        sh 'liquibase status --log-level=INFO --url="jdbc:mysql://192.168.67.128:3306/liquibase" --changeLogFile=my_app-wrapper.xml --username=newuser --password=P@ssw0rd'
       }
     }
     stage('Update') {
       steps {
-        sh 'liquibase update --url="jmysql://192.168.67.128:3306/liquibase" --changeLogFile=my_app-wrapper.xml --username=newuser --password=P@ssw0rd'
+        sh 'liquibase update --log-level=INFO --url="jmysql://192.168.67.128:3306/liquibase" --changeLogFile=my_app-wrapper.xml --username=newuser --password=P@ssw0rd'
       }
     }
   }
