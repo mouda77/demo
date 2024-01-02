@@ -1,4 +1,4 @@
-SELECT * from student_data2 ;
+SELECT student_id  from student_data2 ;
 CREATE TABLE student_data2 (
              student_id int primary key,
              student_name varchar(25),
