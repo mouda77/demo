@@ -1,4 +1,4 @@
-DROP TABLE student_data2 ;
+select student_id  from student_data2 ;
 
 --CREATE TABLE student_data2 (
   --           student_id int primary key,
