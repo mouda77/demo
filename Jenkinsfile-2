@@ -20,7 +20,7 @@ stage('checks') {
       }
     }
   }
-  post {
+  post {   
     always {
       cleanWs()
     }
