@@ -9,7 +9,7 @@ pipeline {
     }
 
 stage('checks') {
-      steps {
+      steps { 
         sh 'liquibase checks show --checks-settings-file=liquibase.checks-settings.conf'
       }
     }
