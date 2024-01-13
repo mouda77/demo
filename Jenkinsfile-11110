@@ -3,7 +3,7 @@ pipeline {
     docker { image 'docker.io/liquibase/liquibase:4.4.2' }
   }
   stages {  
-    stage('Test') {
+    stage('Test') {  
       steps {  
         sh 'liquibase --version'
       }
