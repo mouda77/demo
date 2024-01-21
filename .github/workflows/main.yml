@@ -1,10 +1,10 @@
-# This is workflow to  run DB queries by Liquibase
+# This is a workflow to run DB queries by Liquibase
 
 name: Daily_CI
 
 # Controls when the workflow will run
 on:
-schedule:
+  schedule:
     - cron: '0 20 * * *'
 
   # Allows you to run this workflow manually from the Actions tab
@@ -12,31 +12,28 @@ schedule:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  
- database_status:
 
+  database_status:
     # The type of runner that the job will run on
-    runs-on: self-hosted 
+    runs-on: self-hosted
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      
-      # Runs a single command using the runners shell
+
+      # Runs a single command using the runner's shell
       - name: Run liquibase status
-        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar status  --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd
+        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar status --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd
 
-jobs:
-  
- validate:
-
+  validate:
     # The type of runner that the job will run on
-    runs-on: self-hosted 
+    runs-on: self-hosted
 
+    # Steps for the validate job
+    steps:
       - name: Run liquibase validate
-        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar validate  --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd    
+        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar validate --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd
 
       - name: Run liquibase update
-        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar update  --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd    
-
+        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar update --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd
