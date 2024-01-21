@@ -1,6 +1,6 @@
 # This is workflow to  run DB queries by Liquibase
 
-name: Daily CI
+name: Daily_CI
 
 # Controls when the workflow will run
 on:
