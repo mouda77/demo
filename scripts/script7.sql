@@ -3,7 +3,7 @@
 --changeset mohamed.ouda:mmm
 --comment: Description of your changeset
 
-create table users (
+create table users1 (
 	id int primary key,
 	name varchar(50) not null,
 	address1 varchar(50),
@@ -12,7 +12,7 @@ create table users (
 );
 				
 --changeset mohamed.ouda:2 labels:v0 context:all
-create table customers (
+create table customers1 (
 	id int primary key,
 	name varchar(50) not null,
 	address1 varchar(50),
