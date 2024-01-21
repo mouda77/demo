@@ -13,10 +13,10 @@ schedule:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   
- database-status:
+ database_status:
 
     # The type of runner that the job will run on
-    runs-on: self-hosted
+    runs-on: self-hosted 
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -26,7 +26,14 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run liquibase status
         run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar status  --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd
-       
+
+jobs:
+  
+ validate:
+
+    # The type of runner that the job will run on
+    runs-on: self-hosted 
+
       - name: Run liquibase validate
         run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar validate  --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd    
 
