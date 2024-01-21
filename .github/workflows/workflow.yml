@@ -28,7 +28,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run liquibase status
-        run: ./liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar validate  --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd' 
+        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar validate  --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd' 
                sh 'liquibase     
 
 
