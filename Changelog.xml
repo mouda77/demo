@@ -11,10 +11,10 @@
                         http://www.liquibase.org/xml/ns/dbchangelog 
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     
-       <changeSet  id="12"  author="Mohamed_Ouda">   <tagDatabase  tag="version_2.1"/> 
+       <changeSet  id="13"  author="Mohamed_Ouda">   <tagDatabase  tag="version_2.2"/> 
        
        </changeSet> 
-                    <include file="scripts/script6.sql" relativeToChangelogFile="true"/>
+                    <include file="scripts/script7.sql" relativeToChangelogFile="true"/>
      
  
 
