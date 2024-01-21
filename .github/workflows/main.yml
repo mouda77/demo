@@ -19,7 +19,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
       # Runs a single command using the runner's shell
@@ -27,7 +27,6 @@ jobs:
         run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar status --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd
 
   validate:
-    # The type of runner that the job will run on
     runs-on: self-hosted
 
     # Steps for the validate job
@@ -35,5 +34,9 @@ jobs:
       - name: Run liquibase validate
         run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar validate --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd
 
+  update:
+    runs-on: self-hosted
+    # Steps for the update job
+    steps:
       - name: Run liquibase update
         run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar update --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=P@ssw0rd
