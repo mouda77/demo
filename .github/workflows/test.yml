@@ -13,12 +13,20 @@ jobs:
 
     steps:
     - name: Set Variable from User Input
-      run: echo "MY_VARIABLE=${{ github.event.inputs.my_variable }}" >> $GITHUB_ENV
+      run: echo "MY_VARIABLE=${{ github.event.inputs.my_variable }}" > my_variable_file.txt
 
     - name: Display Variable
-      run: echo "Value of MY_VARIABLE: ${{ env.MY_VARIABLE }}"
+      run: cat my_variable_file.txt
 
-    - name: Use Variable in Another File
+    - name: Commit Variable to Repository
       run: |
-        echo "export MY_VARIABLE=${{ env.MY_VARIABLE }}" >> another_file.sh
-        cat another_file.sh
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+        git add my_variable_file.txt
+        git commit -m "Update MY_VARIABLE" || true
+        git push
+
+    - name: Use Variable
+      run: |
+        source my_variable_file.txt
+        echo "Value of MY_VARIABLE: $MY_VARIABLE"
