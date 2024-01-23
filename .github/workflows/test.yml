@@ -9,22 +9,13 @@ on:
 
 jobs:
   user-input:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Set Variable from User Input
-      run: echo "MY_VARIABLE=${{ github.event.inputs.my_variable }}" > my_variable_file.txt
+      run: echo "MY_VARIABLE=${{ github.event.inputs.my_variable }}" 
 
-    - name: Display Variable
-      run: cat my_variable_file.txt
-
-    - name: Commit Variable to Repository
-      run: |
-        git config --global user.email "actions@github.com"
-        git config --global user.name "GitHub Actions"
-        git add my_variable_file.txt
-        git commit -m "Update MY_VARIABLE" || true
-        git push
+   
 
     - name: Use Variable
       run: |
