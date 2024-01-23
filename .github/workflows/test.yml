@@ -13,9 +13,10 @@ jobs:
 
     steps:
     - name: Set Variable from User Input
+    
       run: |
-        echo "::set-env name=CHANGESET_AUTHOR::${{ github.event_name }}_${{ github.actor }}"
-
+        AUTHOR="${{ github.event_name }}_${{ github.actor }}"
+        echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
 
    
   # Job to check the status of the database
