@@ -1,10 +1,10 @@
-name: User Input Example
+name: authur
 
 on:
   workflow_dispatch:
     inputs:
-      my_variable:
-        description: 'Enter a value for MY_VARIABLE'
+      authur:
+        description: 'Enter a value for authur'
         required: true
 
 jobs:
@@ -13,6 +13,6 @@ jobs:
 
     steps:
     - name: Set Variable from User Input
-      run: echo "MY_VARIABLE=${{ github.event.inputs.my_variable }}" 
+      run: echo "authur=${{ github.event.inputs.authur }}" 
 
    
