@@ -11,7 +11,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog 
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     
-       <changeSet  id="15"  author=${{ github.event.inputs.authur }}>   <tagDatabase  tag="version_2.4"/> 
+       <changeSet  id="15"  author="${{ github.event.inputs.authur }}">   <tagDatabase  tag="version_2.4"/> 
        
        </changeSet> 
                     <include file="scripts/script7.sql" relativeToChangelogFile="true"/>
