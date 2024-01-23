@@ -17,6 +17,7 @@ jobs:
       run: |
         AUTHOR="${{ github.event_name }}_${{ github.actor }}"
         echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
+        echo "CHANGESET_AUTHOR=${{ env.CHANGESET_AUTHOR }}"
 
    
   # Job to check the status of the database
