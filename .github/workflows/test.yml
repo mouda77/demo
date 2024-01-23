@@ -1,0 +1,24 @@
+name: User Input Example
+
+on:
+  workflow_dispatch:
+    inputs:
+      my_variable:
+        description: 'Enter a value for MY_VARIABLE'
+        required: true
+
+jobs:
+  user-input:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set Variable from User Input
+      run: echo "MY_VARIABLE=${{ github.event.inputs.my_variable }}" > my_variable_file.txt
+
+    - name: Display Variable
+      run: cat my_variable_file.txt
+
+    - name: Use Variable
+      run: |
+        source my_variable_file.txt
+        echo "Value of MY_VARIABLE: $MY_VARIABLE"
