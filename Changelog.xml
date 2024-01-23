@@ -11,12 +11,8 @@
                         http://www.liquibase.org/xml/ns/dbchangelog 
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     
-       <changeSet  id="16"  author="${{ env.CHANGESET_AUTHOR }}>"   <tagDatabase  tag="version_2.8"/> 
-       
-       </changeSet> 
-                    <include file="scripts/script7.sql" relativeToChangelogFile="true"/>
-     
- 
-
-
+    <changeSet  id="16"  author="${{ env.CHANGESET_AUTHOR }}">
+        <tagDatabase  tag="version_2.8"/> 
+    </changeSet> 
+    <include file="scripts/script7.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
