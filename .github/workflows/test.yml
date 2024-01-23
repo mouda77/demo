@@ -23,10 +23,10 @@ jobs:
     runs-on: self-hosted
     needs: author-input
     steps:
-      - name: Modify changeset.xml
+      - name: Modify Changelog.xml
         run: |
           new_author_value="${{ env.CHANGESET_AUTHOR }}"
-          sed -i "s/author='[^']*'/author='$new_author_value'/" changeset.xml
+          sed -i "s/author='[^']*'/author='$new_author_value'/" Changelog.xml
 
   database_status:
     runs-on: self-hosted
