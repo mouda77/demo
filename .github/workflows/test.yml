@@ -16,8 +16,3 @@ jobs:
       run: echo "MY_VARIABLE=${{ github.event.inputs.my_variable }}" 
 
    
-
-    - name: Use Variable
-      run: |
-        source my_variable_file.txt
-        echo "Value of MY_VARIABLE: $MY_VARIABLE"
