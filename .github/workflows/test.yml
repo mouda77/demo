@@ -1,55 +1,53 @@
-name: authur
+name: author
 
 on:
   workflow_dispatch:
     inputs:
-      authur:
-        description: 'Enter a value for authur'
+      author:
+        description: 'Enter a value for author'
         required: true
 
 jobs:
-  auther-input:
+  author-input:
     runs-on: self-hosted
 
     steps:
     - name: Set Variable from User Input
-    
       run: |
-         CHANGESET_AUTHOR="${{ github.event.inputs.author }}"
-         echo "CHANGESET_AUTHOR=$CHANGESET_AUTHOR" >> $GITHUB_ENV
-         echo "CHANGESET_AUTHOR=${{ env.CHANGESET_AUTHOR }}"
+        CHANGESET_AUTHOR="${{ github.event.inputs.author }}"
+        echo "CHANGESET_AUTHOR=$CHANGESET_AUTHOR" >> $GITHUB_ENV
+        echo "CHANGESET_AUTHOR=${{ env.CHANGESET_AUTHOR }}"
 
-   
-  # Job to check the status of the database
-  database_status:
-    # The type of runner that the job will run on
+  # Add a separate step to modify changeset.xml
+  modify-changeset:
     runs-on: self-hosted
-    needs: auther-input
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    needs: author-input
     steps:
-      # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Modify changeset.xml
+        run: |
+          new_author_value="${{ env.CHANGESET_AUTHOR }}"
+          sed -i "s/author='[^']*'/author='$new_author_value'/" changeset.xml
+
+  database_status:
+    runs-on: self-hosted
+    needs: modify-changeset
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Runs a single command using the runner's shell
       - name: Run liquibase status
         run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar status --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=${{ secrets.DB_PASSWORD }}
 
-  # Job to validate database changes
   validate:
     runs-on: self-hosted
     needs: database_status
-
     steps:
       - name: Run liquibase validate
         run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar validate --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=${{ secrets.DB_PASSWORD }}
 
-  # Job to update the database
   update:
     runs-on: self-hosted
     needs: validate
-
     steps:
       - name: Run liquibase update
         run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar update --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=${{ secrets.DB_PASSWORD }}
-
