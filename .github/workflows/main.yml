@@ -43,7 +43,7 @@ jobs:
     - name: Append content to  schema.sql
       run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
 
- # Add and commit changes to Git
+# Add and commit changes to Git
     - name: Commit changes
       run: |
         git config --local user.email "action@github.com"
@@ -59,9 +59,12 @@ jobs:
     - name: Merge changes
       run: git merge origin/main
       
+    # Pull changes from remote and merge into local branch
+    - name: Pull changes
+      run: git pull origin main --ff-only
+      
     # Push changes to repository
     - name: Push changes
       run: git push https://github.com/mouda77/demo/ main
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the default token provided by GitHub
-
