@@ -45,7 +45,7 @@ jobs:
 
     - name: Commit changes
       env:
-       key:  ${{ secrets.key }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
        git config --local user.email "action@github.com"
        git config --local user.name "GitHub Action"
