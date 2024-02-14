@@ -47,8 +47,7 @@ jobs:
        git config --local user.name "GitHub Action"
        git add schema.sql
        git commit -m "Append content from deploy1.sql"
-       git push
-   
+       git push https://github.com/mouda77/demo/ HEAD:main --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
 
     
         
