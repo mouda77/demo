@@ -44,7 +44,6 @@ jobs:
     - name: Commit changes
       run: |
         git add deploy1.sql
-        git commit -m "Append content from schema.sql"
         git push
         
       
