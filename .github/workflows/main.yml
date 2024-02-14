@@ -43,7 +43,10 @@ jobs:
 
     - name: Commit changes
       run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
         git add deploy1.sql
+        git commit -m "Append content from schema.sql"
         git push
         
       
