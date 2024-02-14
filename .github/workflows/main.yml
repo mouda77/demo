@@ -51,13 +51,17 @@ jobs:
         git add schema.sql
         git commit -m "Append content from deploy1.sql"
         
+    # Fetch latest changes from remote
+    - name: Fetch latest changes
+      run: git fetch origin
+      
+    # Merge fetched changes into local branch
+    - name: Merge changes
+      run: git merge origin/main
+      
     # Push changes to repository
     - name: Push changes
-      run: git push https://github.com/mouda77/demo/ HEAD:main
+      run: git push https://github.com/mouda77/demo/ main
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the default token provided by GitHub
-        
-  
-        
-      
-  
+
