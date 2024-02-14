@@ -42,8 +42,8 @@ jobs:
       run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
 
     - name: Commit changes
-    env:
-      NPM_TOKEN:  ${{ secrets.key }}
+      env:
+       NPM_TOKEN:  ${{ secrets.key }}
       run: |
        git config --local user.email "action@github.com"
        git config --local user.name "GitHub Action"
