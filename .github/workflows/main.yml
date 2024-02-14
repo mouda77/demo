@@ -38,16 +38,11 @@ jobs:
       id: read_file1
       run: echo "::set-output name=content::$(cat schema.sql)"
 
-    - name: Append content to file2.txt
-      run: echo "${{ steps.read_file1.outputs.content }}" >> deploy1.sql
+    - name: Append content to deploy1.sql
+      run: echo "${{ steps.read_schema.outputs.content }}" >> deploy1.sql
+   
 
-    - name: Commit changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add deploy1.sql
-        git commit -m "Append content from schema.sql"
-        git push
+    
         
       
   
