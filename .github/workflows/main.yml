@@ -43,7 +43,7 @@ jobs:
 
     - name: Commit changes
       env:
-       NPM_TOKEN:  ${{ secrets.key }}
+       key:  ${{ secrets.key }}
       run: |
        git config --local user.email "action@github.com"
        git config --local user.name "GitHub Action"
