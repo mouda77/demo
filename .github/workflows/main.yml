@@ -42,12 +42,14 @@ jobs:
       run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
 
     - name: Commit changes
+    env:
+      NPM_TOKEN:  ${{ secrets.key }}
       run: |
        git config --local user.email "action@github.com"
        git config --local user.name "GitHub Action"
        git add schema.sql
        git commit -m "Append content from deploy1.sql"
-       git push https://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@github.com/mouda77/demo.git HEAD:main
+       git push https://github.com/mouda77/demo/ HEAD:main
       
 
     
