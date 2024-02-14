@@ -1,6 +1,6 @@
 # This is a workflow to run DB queries by Liquibase
 
-name: Daily_CI
+name: Atlas_CI
 
 # Controls when the workflow will run
 on:
@@ -25,8 +25,8 @@ jobs:
         uses: actions/checkout@v3
 
       # Runs a single command using the runner's shell
-      - name: Run liquibase status
-        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar status --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=${{ secrets.DB_PASSWORD }}
+      - name: Run Altas inspect
+        run:  atlas schema inspect -u "mysql://root:P@ssw0rd@localhost/test" --format '{{ sql . }}' > schema.sql
 
   # Job to validate database changes
   validate:
