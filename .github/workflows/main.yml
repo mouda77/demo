@@ -41,6 +41,13 @@ jobs:
     - name: Append content to  schema.sql
       run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
 
+    - name: Commit changes
+      run: |
+       git config --local user.email "action@github.com"
+       git config --local user.name "GitHub Action"
+       git add schema.sql
+       git commit -m "Append content from deploy1.sql"
+       git push
    
 
     
