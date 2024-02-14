@@ -34,12 +34,12 @@ jobs:
     #needs: database_status
 
     steps:
-    - name: Read content of file1.txt
+    - name: Read content of  deploy1.sql
       id: read_file1
-      run: echo "::set-output name=content::$(cat schema.sql)"
+      run: echo "::set-output name=content::$(cat deploy1.sql)"
 
-    - name: Append content to deploy1.sql
-      run: echo "${{ steps.read_schema.outputs.content }}" >> deploy1.sql
+    - name: Append content to  schema.sql
+      run: echo "${{ steps.read_schema.outputs.content }}" >>  schema.sql
    
 
     
