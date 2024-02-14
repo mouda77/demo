@@ -14,7 +14,7 @@ on:
 jobs:
 
   # Job to check the status of the database
-  database_status:
+  Altas_inspect:
     # The type of runner that the job will run on
     runs-on: self-hosted
 
