@@ -29,19 +29,25 @@ jobs:
         run:  atlas schema inspect -u "mysql://root:P@ssw0rd@localhost/test" --format '{{ sql . }}' > schema.sql
 
   # Job to validate database changes
-  validate:
+  prepare_the_depoy:
     runs-on: self-hosted
     #needs: database_status
 
     steps:
-      - name: Run liquibase validate
-        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar validate --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=${{ secrets.DB_PASSWORD }}
+    - name: Read content of file1.txt
+      id: read_file1
+      run: echo "::set-output name=content::$(cat schema.sql)"
 
-  # Job to update the database
-  update:
-    runs-on: self-hosted
-    #needs: validate
+    - name: Append content to file2.txt
+      run: echo "${{ steps.read_file1.outputs.content }}" >> deploy1.sql
 
-    steps:
-      - name: Run liquibase update
-        run: liquibase --classpath=/var/lib/mysql/mysql-connector-j-8.0.31.jar update --url=jdbc:mysql://10.3.1.18:3306/liquibase --changeLogFile=Changelog.xml --username=newuser --password=${{ secrets.DB_PASSWORD }}
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add deploy1.sql
+        git commit -m "Append content from schema.sql"
+        git push
+        
+      
+  
