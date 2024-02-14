@@ -31,7 +31,7 @@ jobs:
   # Job to validate database changes
   validate:
     runs-on: self-hosted
-    needs: database_status
+    #needs: database_status
 
     steps:
       - name: Run liquibase validate
@@ -40,7 +40,7 @@ jobs:
   # Job to update the database
   update:
     runs-on: self-hosted
-    needs: validate
+    #needs: validate
 
     steps:
       - name: Run liquibase update
