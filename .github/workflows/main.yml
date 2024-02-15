@@ -22,10 +22,18 @@ jobs:
       - name: Commit schema file
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.name "mouda77"
           git add schema.sql
-          git commit -m "Update schema.sql with Atlas inspect output" || echo "No changes to commit."
-          git push
+          git commit -m "commit schema file" || echo "No changes to commit"
+          git fetch origin
+          git merge origin/main
+          git pull origin main --ff-only
+
+      - name: Push changes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
+
 
   prepare_the_deploy:
     runs-on: self-hosted
@@ -34,32 +42,31 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Git
+      - name: Read content of deploy1.sql
+        id: read_file1
+        run: echo "::set-output name=content::$(cat deploy1.sql)"
+
+      - name: Append content to schema.sql
+        run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
+
+      - name: Commit new changes
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-
-      - name: Append content to schema.sql and commit
-        run: |
-          cat deploy1.sql >> schema.sql
+          git config --local user.name "mouda77"
           git add schema.sql
-          git diff --staged --quiet || git commit -m "Append content from deploy1.sql to schema.sql"
-
-      - name: Fetch the latest history
-        run: git fetch --prune
-
-      - name: Rebase local changes on top of the fetched main branch
-        run: git rebase origin/main
+          git commit -m "Append content from deploy1.sql" || echo "No changes to commit"
+          git fetch origin
+          git merge origin/main
+          git pull origin main --ff-only
 
       - name: Push changes
-        run: git push origin HEAD:main
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
 
   make_the_deploy:
     runs-on: self-hosted
     needs: prepare_the_deploy
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
       - name: Start deploy
-        run: atlas schema apply --auto-approve -u "mysql://root:P@ssw0rd@localhost/test" --to file://$(pwd)/schema.sql --dev-url "mysql://root:P@ssw0rd@localhost/test2"
+        run: atlas schema apply --auto-approve -u "mysql://root:P@ssw0rd@localhost/test" --to file://schema.sql --dev-url "mysql://root:P@ssw0rd@localhost/test2"
