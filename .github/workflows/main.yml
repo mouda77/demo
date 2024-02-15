@@ -19,6 +19,22 @@ jobs:
       - name: Run Atlas inspect
         run: atlas schema inspect -u "mysql://root:P@ssw0rd@localhost/test" --format '{{ sql . }}' > schema.sql
 
+      - name: Commit schema file
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "mouda77"
+          git add schema.sql
+          git commit -m "commit schema file" || echo "No changes to commit"
+          git fetch origin
+          git merge origin/main
+          git pull origin main --ff-only
+
+      - name: Push changes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
+
+
   prepare_the_deploy:
     runs-on: self-hosted
     needs: Atlas_inspect
@@ -33,7 +49,7 @@ jobs:
       - name: Append content to schema.sql
         run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
 
-      - name: Commit changes
+      - name: Commit new changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "mouda77"
