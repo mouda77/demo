@@ -1,79 +1,56 @@
-# This is a workflow to run DB queries by Atlas
-
 name: Atlas_CI
 
-# Controls when the workflow will run
 on:
   schedule:
     - cron: '0 20 * * *'
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-permissions: write-all
-  
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+permissions:
+  contents: write
+  issues: write
+
 jobs:
-
-  # Job to check the status of the database
-  Altas_inspect:
-    # The type of runner that the job will run on
+  Atlas_inspect:
     runs-on: self-hosted
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Runs a single command using the runner's shell
-      - name: Run Altas inspect
-        run:  atlas schema inspect -u "mysql://root:P@ssw0rd@localhost/test" --format '{{ sql . }}' > schema.sql
+      - name: Run Atlas inspect
+        run: atlas schema inspect -u "mysql://root:P@ssw0rd@localhost/test" --format '{{ sql . }}' > schema.sql
 
-  # prepare
-  prepare_the_depoy:
+  prepare_the_deploy:
     runs-on: self-hosted
-    #needs: database_status
-
+    needs: Atlas_inspect
     steps:
-    - name: Read content of deploy1.sql
-      id: read_file1
-      run: echo "::set-output name=content::$(cat deploy1.sql)"
-    
-    - name: Append content to  schema.sql
-      run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-# Add and commit changes to Git
-    - name: Commit changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "mouda77"
-        git add schema.sql
-        git commit -m "Append content from deploy1.sql"
-        
-    # Fetch latest changes from remote
-    - name: Fetch latest changes
-      run: git fetch origin
-      
-    # Merge fetched changes into local branch
-    - name: Merge changes
-      run: git merge origin/main
-      
-    # Pull changes from remote and merge into local branch
-    - name: Pull changes
-      run: git pull origin main --ff-only
-      
-    # Push changes to repository
-    - name: Push changes
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Assuming you're using GitHub Actions' built-in GITHUB_TOKEN or a personal access token you've stored in secrets
-      run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
+      - name: Read content of deploy1.sql
+        id: read_file1
+        run: echo "::set-output name=content::$(cat deploy1.sql)"
 
-     # prepare
-      make_the_depoy:
-      runs-on: self-hosted
-    #needs: database_status
+      - name: Append content to schema.sql
+        run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
 
-      steps:
-      - name: start depoy
-       run:  atlas schema apply  --auto-approve -u "mysql://root:P@ssw0rd@localhost/test"   --to file://schema.sql   --dev-url "mysql://root:P@ssw0rd@localhost/test2"
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "mouda77"
+          git add schema.sql
+          git commit -m "Append content from deploy1.sql" || echo "No changes to commit"
+          git fetch origin
+          git merge origin/main
+          git pull origin main --ff-only
+
+      - name: Push changes
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
+
+  make_the_deploy:
+    runs-on: self-hosted
+    needs: prepare_the_deploy
+    steps:
+      - name: Start deploy
+        run: atlas schema apply --auto-approve -u "mysql://root:P@ssw0rd@localhost/test" --to file://schema.sql --dev-url "mysql://root:P@ssw0rd@localhost/test2"
