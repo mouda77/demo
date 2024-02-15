@@ -65,7 +65,7 @@ jobs:
       
     # Push changes to repository
     - name: Push changes
-      run: |
-        git push https://github.com/mouda77/demo/ HEAD:main
+      run: git push https://github.com/mouda77/demo/ HEAD:main
+
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }} # Use the default token provided by GitHub
