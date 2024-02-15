@@ -30,7 +30,7 @@ jobs:
       - name: Run Altas inspect
         run:  atlas schema inspect -u "mysql://root:P@ssw0rd@localhost/test" --format '{{ sql . }}' > schema.sql
 
-  # Job to validate database changes
+  # prepare
   prepare_the_depoy:
     runs-on: self-hosted
     #needs: database_status
@@ -69,4 +69,11 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Assuming you're using GitHub Actions' built-in GITHUB_TOKEN or a personal access token you've stored in secrets
       run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
 
-  
+     # prepare
+    make the_depoy:
+     runs-on: self-hosted
+    #needs: database_status
+
+     steps:
+     - name: start depoy
+       run:  atlas schema apply  --auto-approve -u "mysql://root:P@ssw0rd@localhost/test"   --to file://schema.sql   --dev-url "mysql://root:P@ssw0rd@localhost/test2"
