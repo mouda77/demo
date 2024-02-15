@@ -60,3 +60,11 @@ jobs:
 
       - name: Start deploy
         run: atlas schema apply --auto-approve -u "mysql://root:P@ssw0rd@localhost/test" --to file://schema.sql --dev-url "mysql://root:P@ssw0rd@localhost/test2"
+
+      - name: Commit and push updated schema.sql to the repository
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add schema.sql
+          git commit -m "Save updated schema.sql after deployment"
+          git push origin HEAD:main
