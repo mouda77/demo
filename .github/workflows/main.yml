@@ -40,11 +40,13 @@ jobs:
       - name: Append content to schema.sql
         run: cat deploy1.sql >> schema.sql
 
-      - name: Upload updated schema.sql as an artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: schema.sql-updated
-          path: schema.sql
+      - name: Commit and push updated schema.sql
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add schema.sql
+          git commit -m "Append content from deploy1.sql to schema.sql-updated"
+          git push origin HEAD:main
 
   make_the_deploy:
     runs-on: self-hosted
@@ -53,10 +55,5 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Download updated schema.sql
-        uses: actions/download-artifact@v2
-        with:
-          name: schema.sql-updated
-
       - name: Start deploy
-        run: atlas schema apply --auto-approve -u "mysql://root:P@ssw0rd@localhost/test" --to file://schema.sql --dev-url "mysql://root:P@ssw0rd@localhost/test2"
+        run: atlas schema apply --auto-approve -u "mysql://root:P@ssw0rd@localhost/test" --to file://$(pwd)/schema.sql --dev-url "mysql://root:P@ssw0rd@localhost/test2"
