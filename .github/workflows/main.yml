@@ -22,17 +22,10 @@ jobs:
       - name: Commit schema file
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "mouda77"
+          git config --local user.name "GitHub Action"
           git add schema.sql
-          git commit -m "commit schema file" || echo "No changes to commit"
-          git fetch origin
-          git merge origin/main --strategy-option=ours || echo "Resolved merge conflict by favoring our changes."
-          git pull origin main --ff-only
-
-      - name: Push changes
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
+          git commit -m "Update schema.sql with Atlas inspect output" || echo "No changes to commit"
+          git push
 
   prepare_the_deploy:
     runs-on: self-hosted
@@ -41,27 +34,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Read content of deploy1.sql
-        id: read_file1
-        run: echo "::set-output name=content::$(cat deploy1.sql)"
-
       - name: Append content to schema.sql
-        run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
-
-      - name: Commit new changes
         run: |
+          cat deploy1.sql >> schema.sql
           git config --local user.email "action@github.com"
-          git config --local user.name "mouda77"
+          git config --local user.name "GitHub Action"
           git add schema.sql
-          git commit -m "Append content from deploy1.sql" || echo "No changes to commit"
-          git fetch origin
-          git merge origin/main --strategy-option=ours || echo "Resolved merge conflict by favoring our changes."
-          git pull origin main --ff-only
-
-      - name: Push changes
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
+          git commit -m "Append content from deploy1.sql to schema.sql" || echo "No changes to commit"
+          git push
 
   make_the_deploy:
     runs-on: self-hosted
