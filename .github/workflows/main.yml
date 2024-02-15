@@ -26,14 +26,13 @@ jobs:
           git add schema.sql
           git commit -m "commit schema file" || echo "No changes to commit"
           git fetch origin
-          git merge origin/main
+          git merge origin/main --strategy-option=ours || echo "Resolved merge conflict by favoring our changes."
           git pull origin main --ff-only
 
       - name: Push changes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
-
 
   prepare_the_deploy:
     runs-on: self-hosted
@@ -56,7 +55,7 @@ jobs:
           git add schema.sql
           git commit -m "Append content from deploy1.sql" || echo "No changes to commit"
           git fetch origin
-          git merge origin/main
+          git merge origin/main --strategy-option=ours || echo "Resolved merge conflict by favoring our changes."
           git pull origin main --ff-only
 
       - name: Push changes
