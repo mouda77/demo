@@ -19,15 +19,11 @@ jobs:
       - name: Run Atlas inspect
         run: atlas schema inspect -u "mysql://root:P@ssw0rd@localhost/test" --format '{{ sql . }}' > schema.sql
 
-      - name: Commit schema file
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add schema.sql
-          git commit -m "Update schema.sql with Atlas inspect output" || echo "No changes to commit"
-          git fetch origin main
-          git reset --hard origin/main
-          git push
+      - name: Upload schema.sql as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: schema.sql
+          path: schema.sql
 
   prepare_the_deploy:
     runs-on: self-hosted
@@ -36,20 +32,31 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Download schema.sql
+        uses: actions/download-artifact@v2
+        with:
+          name: schema.sql
+
       - name: Append content to schema.sql
-        run: |
-          cat deploy1.sql >> schema.sql
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add schema.sql
-          git commit -m "Append content from deploy1.sql to schema.sql" || echo "No changes to commit"
-          git fetch origin main
-          git reset --hard origin/main
-          git push
+        run: cat deploy1.sql >> schema.sql
+
+      - name: Upload updated schema.sql as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: schema.sql-updated
+          path: schema.sql
 
   make_the_deploy:
     runs-on: self-hosted
     needs: prepare_the_deploy
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Download updated schema.sql
+        uses: actions/download-artifact@v2
+        with:
+          name: schema.sql-updated
+
       - name: Start deploy
         run: atlas schema apply --auto-approve -u "mysql://root:P@ssw0rd@localhost/test" --to file://schema.sql --dev-url "mysql://root:P@ssw0rd@localhost/test2"
