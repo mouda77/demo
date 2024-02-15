@@ -70,10 +70,10 @@ jobs:
       run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
 
      # prepare
-    make the_depoy:
-     runs-on: self-hosted
+      make_the_depoy:
+      runs-on: self-hosted
     #needs: database_status
 
-     steps:
-     - name: start depoy
+      steps:
+      - name: start depoy
        run:  atlas schema apply  --auto-approve -u "mysql://root:P@ssw0rd@localhost/test"   --to file://schema.sql   --dev-url "mysql://root:P@ssw0rd@localhost/test2"
