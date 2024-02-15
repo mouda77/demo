@@ -25,7 +25,8 @@ jobs:
           git config --local user.name "GitHub Action"
           git add schema.sql
           git commit -m "Update schema.sql with Atlas inspect output" || echo "No changes to commit"
-          git pull --rebase
+          git fetch origin main
+          git reset --hard origin/main
           git push
 
   prepare_the_deploy:
@@ -42,7 +43,8 @@ jobs:
           git config --local user.name "GitHub Action"
           git add schema.sql
           git commit -m "Append content from deploy1.sql to schema.sql" || echo "No changes to commit"
-          git pull --rebase
+          git fetch origin main
+          git reset --hard origin/main
           git push
 
   make_the_deploy:
