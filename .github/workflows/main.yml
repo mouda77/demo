@@ -28,7 +28,6 @@ jobs:
           git push
 
   prepare_the_deploy:
-     prepare_the_deploy:
     runs-on: self-hosted
     needs: Atlas_inspect
     steps:
