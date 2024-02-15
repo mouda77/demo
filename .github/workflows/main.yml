@@ -19,21 +19,11 @@ jobs:
       - name: Run Atlas inspect
         run: atlas schema inspect -u "mysql://root:P@ssw0rd@localhost/test" --format '{{ sql . }}' > schema.sql
 
-      - name: Commit schema file
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "mouda77"
-          git add schema.sql
-          git commit -m "commit schema file" || echo "No changes to commit"
-          git fetch origin
-          git merge origin/main
-          git pull origin main --ff-only
-
-      - name: Push changes
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
-
+      - name: Upload schema.sql as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: schema.sql
+          path: schema.sql
 
   prepare_the_deploy:
     runs-on: self-hosted
@@ -42,31 +32,31 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Read content of deploy1.sql
-        id: read_file1
-        run: echo "::set-output name=content::$(cat deploy1.sql)"
+      - name: Download schema.sql
+        uses: actions/download-artifact@v2
+        with:
+          name: schema.sql
 
       - name: Append content to schema.sql
-        run: echo "${{ steps.read_file1.outputs.content }}" >> schema.sql
+        run: cat deploy1.sql >> schema.sql
 
-      - name: Commit new changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "mouda77"
-          git add schema.sql
-          git commit -m "Append content from deploy1.sql" || echo "No changes to commit"
-          git fetch origin
-          git merge origin/main
-          git pull origin main --ff-only
-
-      - name: Push changes
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: git push https://mouda77:${GH_TOKEN}@github.com/mouda77/demo.git HEAD:main
+      - name: Upload updated schema.sql as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: schema.sql-updated
+          path: schema.sql
 
   make_the_deploy:
     runs-on: self-hosted
     needs: prepare_the_deploy
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Download updated schema.sql
+        uses: actions/download-artifact@v2
+        with:
+          name: schema.sql-updated
+
       - name: Start deploy
         run: atlas schema apply --auto-approve -u "mysql://root:P@ssw0rd@localhost/test" --to file://schema.sql --dev-url "mysql://root:P@ssw0rd@localhost/test2"
