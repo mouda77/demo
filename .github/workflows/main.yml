@@ -28,6 +28,7 @@ jobs:
           git push
 
   prepare_the_deploy:
+     prepare_the_deploy:
     runs-on: self-hosted
     needs: Atlas_inspect
     steps:
@@ -39,19 +40,17 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-      - name: Append content to schema.sql
-        run: cat deploy1.sql >> schema.sql
+      - name: Append content to schema.sql and commit
+        run: |
+          cat deploy1.sql >> schema.sql
+          git add schema.sql
+          git diff --staged --quiet || git commit -m "Append content from deploy1.sql to schema.sql"
 
-      - name: Fetch the latest history and set up for rebase
+      - name: Fetch the latest history
         run: git fetch --prune
 
       - name: Rebase local changes on top of the fetched main branch
         run: git rebase origin/main
-
-      - name: Commit changes
-        run: |
-          git add schema.sql
-          git commit -m "Append content from deploy1.sql to schema.sql" || echo "No changes to commit."
 
       - name: Push changes
         run: git push origin HEAD:main
